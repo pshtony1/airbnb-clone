@@ -89,3 +89,18 @@ class Room(core_models.TimeStampedModel):
 
     def __str__(self):
         return f"{self.name} - {self.host.username}"
+
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+
+        if len(all_reviews) == 0:
+            return 0
+
+        sum_ratings = 0
+        count_ratings = 0
+
+        for review in all_reviews:
+            sum_ratings += review.rating_average()
+            count_ratings += 1
+
+        return round(sum_ratings / count_ratings, 2)

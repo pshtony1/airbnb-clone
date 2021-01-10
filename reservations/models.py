@@ -1,5 +1,14 @@
 from django.db import models
+from django.utils import timezone
+from django.utils.dateparse import parse_date
 from core import models as core_models
+
+
+def get_now_date():
+    now = timezone.now().date()
+    now = parse_date(timezone.localtime().strftime("%Y-%m-%d"))
+
+    return now
 
 
 class Reservation(core_models.TimeStampedModel):
@@ -30,3 +39,14 @@ class Reservation(core_models.TimeStampedModel):
 
     def __str__(self):
         return f"{self.room} / {self.guest} - {self.check_in} ~ {self.check_out}"
+
+    def in_progress(self):
+        now = get_now_date()
+        return now > self.check_in and now < self.check_out
+
+    def is_finished(self):
+        now = get_now_date()
+        return now > self.check_out
+
+    in_progress.boolean = True
+    is_finished.boolean = True
