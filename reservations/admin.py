@@ -16,10 +16,10 @@ class ProgressListFilter(admin.SimpleListFilter):
         now = models.get_now_date()
 
         if self.value() == "True":
-            return queryset.filter(check_in__lt=now, check_out__gt=now)
+            return queryset.filter(check_in__lte=now, check_out__gte=now)
 
         elif self.value() == "False":
-            return queryset.exclude(check_in__lt=now, check_out__gt=now)
+            return queryset.exclude(check_in__lte=now, check_out__gte=now)
 
 
 class FinishedListFilter(admin.SimpleListFilter):
